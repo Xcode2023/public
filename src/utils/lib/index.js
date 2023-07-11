@@ -1,0 +1,142 @@
+import { isArray } from "../is";
+
+/**
+ * @description 获取localStorage
+ * @param {String} key Storage名称
+ * @return string
+ */
+export function localGet(key) {
+	const value = window.localStorage.getItem(key);
+	try {
+		return JSON.parse(window.localStorage.getItem(key));
+	} catch (error) {
+		return value;
+	}
+}
+
+/**
+ * @description 存储localStorage
+ * @param {String} key Storage名称
+ * @param {Any} value Storage值
+ * @return void
+ */
+export function localSet(key, value) {
+	window.localStorage.setItem(key, JSON.stringify(value));
+}
+
+/**
+ * @description 清除localStorage
+ * @param {String} key Storage名称
+ * @return void
+ */
+export function localRemove(key) {
+	window.localStorage.removeItem(key);
+}
+
+/**
+ * @description 清除所有localStorage
+ * @return void
+ */
+export function localClear() {
+	window.localStorage.clear();
+}
+
+/**
+ * @description 对象数组深克隆
+ * @param {Object} obj 源对象
+ * @return object
+ */
+export function deepCopy(obj) {
+	let newObj;
+	try {
+		newObj = obj.push ? [] : {};
+	} catch (error) {
+		newObj = {};
+	}
+	for (let attr in obj) {
+		if (typeof obj[attr] === "object") {
+			newObj[attr] = deepCopy(obj[attr]);
+		} else {
+			newObj[attr] = obj[attr];
+		}
+	}
+	return newObj;
+}
+
+/**
+ * @description 判断数据类型
+ * @param {Any} val 需要判断类型的数据
+ * @return string
+ */
+export function isType(val) {
+	if (val === null) return "null";
+	if (typeof val !== "object") return typeof val;
+	return Object.prototype.toString.call(val).slice(8, -1).toLocaleLowerCase();
+}
+
+/**
+ * @description 生成随机数
+ * @param {Number} min 最小值
+ * @param {Number} max 最大值
+ * @return number
+ */
+export function randomNum(min, max) {
+	let num = Math.floor(Math.random() * (min - max) + max);
+	return num;
+}
+
+/**
+ * @description 获取当前时间
+ * @return string
+ */
+export function getTimeState() {
+	// 获取当前时间
+	let timeNow = new Date();
+	// 获取当前小时
+	let hours = timeNow.getHours();
+	// 判断当前时间段
+	if (hours >= 6 && hours <= 10) return `早上好 ⛅`;
+	if (hours >= 10 && hours <= 14) return `中午好 🌞`;
+	if (hours >= 14 && hours <= 18) return `下午好 🌞`;
+	if (hours >= 18 && hours <= 24) return `晚上好 🌛`;
+	if (hours >= 0 && hours <= 6) return `凌晨好 🌛`;
+}
+
+/**
+ * @description 获取浏览器默认语言
+ * @return string
+ */
+export function getBrowserLang() {
+	let browserLang = navigator.language ? navigator.language : navigator.browserLanguage;
+	let defaultBrowserLang = "";
+	if (browserLang.toLowerCase() === "cn" || browserLang.toLowerCase() === "zh" || browserLang.toLowerCase() === "zh-cn") {
+		defaultBrowserLang = "zh";
+	} else {
+		defaultBrowserLang = "en";
+	}
+	return defaultBrowserLang;
+}
+
+/**
+ * @description 格式化表格单元格默认值
+ * @param {Number} row 行
+ * @param {Number} col 列
+ * @param {String} callValue 当前单元格值
+ * @return string
+ * */
+export function defaultFormat(row, col, callValue) {
+	// 如果当前值为数组,使用 / 拼接（根据需求自定义）
+	if (isArray(callValue)) return callValue.length ? callValue.join(" / ") : "--";
+	return callValue ?? "--";
+}
+
+/**
+ * @description 处理无数据情况
+ * @param {String} callValue 需要处理的值
+ * @return string
+ * */
+export function formatValue(callValue) {
+	// 如果当前值为数组,使用 / 拼接（根据需求自定义）
+	if (isArray(callValue)) return callValue.length ? callValue.join(" / ") : "--";
+	return callValue ?? "--";
+}
